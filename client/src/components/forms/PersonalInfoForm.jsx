@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../hooks/useAuth";
 
-const PersonalInfoForm = () => {
+const PersonalInfoForm = ({ onClose, user }) => {
   const initialState = {
     profileUrl: "",
     jobDetails: {
@@ -59,6 +61,7 @@ const PersonalInfoForm = () => {
   };
 
   const [formData, setFormData] = useState(initialState);
+  const { user: userData } = useAuth();
 
   const handleNestedChange = (path, value) => {
     const keys = path.split(".");
@@ -130,20 +133,38 @@ const PersonalInfoForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Handle form submission here
+    try {
+      // const userId = userData._id;
+      const userId = "67780590532ea6d1b692b7df";
+      const response = await axios.post(
+        "http://localhost:5000/api/personalDetails/personalinfo",
+        { formData, userId }
+      );
+      alert("Personal info updated successfully");
+      // onClose();
+      console.log(response);
+    } catch (error) {
+      console.log("Error:", error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("An error occurred while saving personal info");
+      }
+    }
+
+    // onClose();
   };
 
   return (
-    <div className="container mt-10 p-10">
+    <div className="max-h-[80vh]">
       <div className="mb-6">
         <h4 className="text-2xl font-bold">Update Your Personal Info</h4>
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Job Details Section */}
             <div className="mb-6">
               <h6 className="text-xl font-semibold mb-4">Job Details</h6>
@@ -398,205 +419,6 @@ const PersonalInfoForm = () => {
               >
                 Add Education
               </button>
-            </div>
-
-            {/* Accomplishments Section */}
-            <div className="mb-6">
-              <h6 className="text-xl font-semibold mb-4">Accomplishments</h6>
-
-              {/* Work Samples */}
-              <div className="mb-4">
-                <label className="font-medium block mb-2">Work Samples</label>
-                {formData.accomplishments.workSamples.map((sample, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={sample}
-                      onChange={(e) =>
-                        handleArrayChange(
-                          "accomplishments.workSamples",
-                          index,
-                          e.target.value
-                        )
-                      }
-                      className="border rounded p-2 flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeArrayItem("accomplishments.workSamples", index)
-                      }
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("accomplishments.workSamples")}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Add Work Sample
-                </button>
-              </div>
-
-              {/* Research Papers */}
-              <div className="mb-4">
-                <label className="font-medium block mb-2">
-                  Research Papers
-                </label>
-                {formData.accomplishments.researchPapers.map((paper, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={paper}
-                      onChange={(e) =>
-                        handleArrayChange(
-                          "accomplishments.researchPapers",
-                          index,
-                          e.target.value
-                        )
-                      }
-                      className="border rounded p-2 flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeArrayItem("accomplishments.researchPapers", index)
-                      }
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("accomplishments.researchPapers")}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Add Research Paper
-                </button>
-              </div>
-
-              {/* Similar structures for presentations, patents, and certifications */}
-              {/* Presentations */}
-              <div className="mb-4">
-                <label className="font-medium block mb-2">Presentations</label>
-                {formData.accomplishments.presentations.map(
-                  (presentation, index) => (
-                    <div key={index} className="flex gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={presentation}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "accomplishments.presentations",
-                            index,
-                            e.target.value
-                          )
-                        }
-                        className="border rounded p-2 flex-1"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removeArrayItem(
-                            "accomplishments.presentations",
-                            index
-                          )
-                        }
-                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  )
-                )}
-                {/* Continuing from previous code - Presentations button */}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("accomplishments.presentations")}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Add Presentation
-                </button>
-              </div>
-
-              {/* Patents */}
-              <div className="mb-4">
-                <label className="font-medium block mb-2">Patents</label>
-                {formData.accomplishments.patents.map((patent, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={patent}
-                      onChange={(e) =>
-                        handleArrayChange(
-                          "accomplishments.patents",
-                          index,
-                          e.target.value
-                        )
-                      }
-                      className="border rounded p-2 flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeArrayItem("accomplishments.patents", index)
-                      }
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("accomplishments.patents")}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Add Patent
-                </button>
-              </div>
-
-              {/* Certifications */}
-              <div className="mb-4">
-                <label className="font-medium block mb-2">Certifications</label>
-                {formData.accomplishments.certifications.map((cert, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={cert}
-                      onChange={(e) =>
-                        handleArrayChange(
-                          "accomplishments.certifications",
-                          index,
-                          e.target.value
-                        )
-                      }
-                      className="border rounded p-2 flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeArrayItem("accomplishments.certifications", index)
-                      }
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem("accomplishments.certifications")}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                  Add Certification
-                </button>
-              </div>
             </div>
 
             {/* Social Platforms Section */}
@@ -871,12 +693,17 @@ const PersonalInfoForm = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="mt-8 flex justify-center">
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold 
-                py-2 px-6 rounded-lg shadow-md hover:shadow-lg 
-                transform hover:-translate-y-0.5 transition-all duration-150"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 Submit
               </button>

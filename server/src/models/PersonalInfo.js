@@ -16,7 +16,7 @@ const PersonalInfoSchema = new mongoose.Schema({
     company: String,
     designation: String,
     location: String,
-    experience: { type: Number },
+    experience: { type: String },
   },
   contactDetails: {
     phone: {
@@ -33,7 +33,7 @@ const PersonalInfoSchema = new mongoose.Schema({
     },
   },
   skills: {
-    type: Array,
+    type: [String],
     required: true,
   },
   education: [
@@ -41,8 +41,8 @@ const PersonalInfoSchema = new mongoose.Schema({
       degree: String,
       institution: String,
       year: {
-        start: Number,
-        end: Number,
+        start: String,
+        end: String,
       },
     },
   ],

@@ -6,7 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
-import PersonalInfoForm from "./components/forms/PersonalInfoForm";
+// import PersonalInfoForm from "./components/forms/PersonalInfoForm";
+import PersonalInfoForm from "./components/forms/index";
 import Layout from "./components/layouts/Layout";
 
 function App() {

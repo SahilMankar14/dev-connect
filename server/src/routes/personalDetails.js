@@ -1,6 +1,10 @@
 const router = require("express").Router();
-const { insertPersonalInfo } = require("../controller/personalnfoController");
+const {
+  insertPersonalInfo,
+  getPersonalInfo,
+} = require("../controller/personalnfoController");
 
 router.post("/personalinfo", insertPersonalInfo);
+router.post("/getpersonalinfo", getPersonalInfo);
 
 module.exports = router;

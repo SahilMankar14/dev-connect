@@ -1,0 +1,61 @@
+{
+  "jobDetails": {
+    "title": "Engineer",
+    "company": "Tecture",
+    "designation": "BIM Engineer",
+    "location": "Indore",
+    "experience": "2"
+  },
+  "contactDetails": {
+    "phone": "1234567890",
+    "email": "bhushan@gmail.com",
+    "address": "Nagpur"
+  },
+  "accomplishments": {
+    "workSamples": [""],
+    "researchPapers": [""],
+    "presentations": [""],
+    "patents": [""],
+    "certifications": [""]
+  },
+  "socialPlatforms": {
+    "linkedin": "https://www.linkedin.com/",
+    "github": "https://www.linkedin.com/",
+    "twitter": "https://www.linkedin.com/",
+    "instagram": "https://www.linkedin.com/"
+  },
+  "personalDetails": {
+    "gender": "male",
+    "maritalStatus": "single",
+    "dob": "2025-02-05T00:00:00.000Z",
+    "workPermit": "India",
+    "languages": [
+      {
+        "proficiency": {
+          "read": true,
+          "write": true,
+          "speak": true
+        },
+        "name": "English",
+        "_id": "67c0899f9f43a45fb36989bb"
+      }
+    ]
+  },
+  "_id": "67c0899f9f43a45fb36989b9",
+  "userId": "67780590532ea6d1b692b7df",
+  "profileUrl": "https://www.linkedin.com",
+  "skills": ["Autocad"],
+  "education": [
+    {
+      "year": {
+        "start": "2025-02-27",
+        "end": "2025-02-28"
+      },
+      "degree": "Mechanical",
+      "institution": "YCCE",
+      "_id": "67c0899f9f43a45fb36989ba"
+    }
+  ],
+  "profileSummary": "Xyz",
+  "__v": 0
+}

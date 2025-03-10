@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       const token = response.data.token;
+      console.log("response:", response.data.user.id);
       localStorage.setItem("token", token);
       setUser(response.data.user);
     } catch (err) {
