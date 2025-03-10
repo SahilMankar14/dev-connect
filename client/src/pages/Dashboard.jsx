@@ -30,8 +30,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex ">
-      <aside className="w-1/5 border-r 4">
+    <div className="flex h-full">
+      <aside className="w-1/5 bg-blue-50  border-r-2  border-t-2">
         {navItems.map((item) => (
           <div
             key={item}
@@ -46,7 +46,9 @@ const Dashboard = () => {
           </div>
         ))}
       </aside>
-      <main className="w-4/5 p-4">{renderNavItems()}</main>
+      <main className="w-4/5 p-4 border-t-2 overflow-y-auto">
+        {renderNavItems()}
+      </main>
     </div>
   );
 };
