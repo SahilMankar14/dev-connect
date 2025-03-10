@@ -17,7 +17,7 @@ const ProfileHeader = ({ user, openModal }) => (
 );
 
 const UserBasicInfo = ({ user, avatar }) => (
-  <div className="flex p-2 mb-2 bg-white rounded-xl">
+  <div className="flex p-2 mb-4 bg-white shadow-lg rounded-xl">
     <div className="mr-4">
       <img src={avatar} alt="Profile" className="w-40 h-40 rounded-full" />
     </div>
@@ -36,16 +36,20 @@ const InfoRow = ({ label, value }) => (
 );
 
 const SectionWrapper = ({ title, children }) => (
-  <div className="rounded-xl p-4 mb-2 bg-white">
-    <h2 className="text-xl font-bold mb-4">{title}</h2>
+  <div className="rounded-xl  mb-4 bg-white shadow-md">
+    <div className="bg-blue-50 p-4 flex items-center">
+      <h2 className="text-xl font-bold">{title}</h2>
+    </div>
     {children}
   </div>
 );
 
 const DetailsList = ({ data, renderItem }) => (
-  <ul className="space-y-2">
-    {data.map((item, index) => renderItem(item, index))}
-  </ul>
+  <div className="p-4">
+    <ul className="space-y-2 grid grid-cols-2">
+      {data.map((item, index) => renderItem(item, index))}
+    </ul>
+  </div>
 );
 
 const ProfileSection = () => {
@@ -85,7 +89,7 @@ const ProfileSection = () => {
   return (
     <div className="p-4">
       <ProfileHeader user={user} openModal={openModal} />
-      <UserBasicInfo user={user} avatar={Avatar} />
+      {/* <UserBasicInfo user={user} avatar={Avatar} /> */}
 
       {/* Job Details */}
       <SectionWrapper title="Job Details">
@@ -102,7 +106,8 @@ const ProfileSection = () => {
           ]}
           renderItem={(item, index) => (
             <li key={index}>
-              <strong>{item.label}:</strong> {item.value || "N/A"}
+              <div className="font-semibold">{item.label}:</div>
+              <div>{item.value || "N/A"}</div>
             </li>
           )}
         />
@@ -118,7 +123,8 @@ const ProfileSection = () => {
           ]}
           renderItem={(item, index) => (
             <li key={index}>
-              <strong>{item.label}:</strong> {item.value || "N/A"}
+              <div className="font-semibold">{item.label}:</div>
+              <div>{item.value || "N/A"}</div>
             </li>
           )}
         />
@@ -141,12 +147,12 @@ const ProfileSection = () => {
           ]}
           renderItem={(item, index) => (
             <li key={index}>
-              <strong>{item.label}:</strong>{" "}
+              <div className="font-semibold">{item.label}:</div>
               <a
                 href={item.value}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline block"
               >
                 {item.value || "N/A"}
               </a>
@@ -177,18 +183,19 @@ const ProfileSection = () => {
           ]}
           renderItem={(item, index) => (
             <li key={index}>
-              <strong>{item.label}:</strong> {item.value || "N/A"}
+              <div className="font-semibold">{item.label}:</div>
+              <div>{item.value || "N/A"}</div>
             </li>
           )}
         />
 
         {/* Languages */}
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">Languages</h3>
+        <div className="p-4">
+          <h3 className="text-lg font-semibold mb-4">Languages</h3>
           {personalInfo.personalDetails?.languages?.map((lang, index) => (
             <div key={index} className="mb-2">
               <strong>{lang.name}</strong>
-              <div className="pl-4">
+              <div className="pl-4 flex gap-4">
                 <p>Read: {lang.proficiency.read ? "Yes" : "No"}</p>
                 <p>Write: {lang.proficiency.write ? "Yes" : "No"}</p>
                 <p>Speak: {lang.proficiency.speak ? "Yes" : "No"}</p>
@@ -200,7 +207,7 @@ const ProfileSection = () => {
 
       {/* Skills */}
       <SectionWrapper title="Skills">
-        <ul className="list-disc pl-6">
+        <ul className="list list-disc px-10 py-4">
           {personalInfo.skills?.map((skill, index) => (
             <li key={index}>{skill}</li>
           ))}
@@ -210,7 +217,7 @@ const ProfileSection = () => {
       {/* Education */}
       <SectionWrapper title="Education">
         {personalInfo.education?.map((edu, index) => (
-          <div key={index} className="mb-4">
+          <div key={index} className="mb-4 p-4">
             <h3 className="text-lg font-semibold">{edu.degree}</h3>
             <p>
               <strong>Institution:</strong> {edu.institution}
@@ -226,7 +233,7 @@ const ProfileSection = () => {
       <SectionWrapper title="Accomplishments">
         {Object.entries(personalInfo.accomplishments || {}).map(
           ([category, items]) => (
-            <div key={category} className="mb-4">
+            <div key={category} className="p-4">
               <h3 className="text-lg font-semibold capitalize">{category}</h3>
               {items &&
               items.length > 0 &&
@@ -250,7 +257,9 @@ const ProfileSection = () => {
 
       {/* Profile Summary */}
       <SectionWrapper title="Profile Summary">
-        <p>{personalInfo.profileSummary || "No summary available"}</p>
+        <p className="p-4">
+          {personalInfo.profileSummary || "No summary available"}
+        </p>
       </SectionWrapper>
 
       {/* Modal for editing profile */}
