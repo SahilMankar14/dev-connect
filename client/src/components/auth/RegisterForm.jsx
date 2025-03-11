@@ -28,7 +28,7 @@ const RegisterForm = () => {
 
   return (
     <div className="flex justify-center items-center w-full h-full">
-      <div className="w-80 bg-slate-200 rounded-lg p-4">
+      <div className="w-80 bg-blue-50 rounded-lg p-4">
         <h4 className="text-center text-xl font-bold">Sign Up</h4>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <label className="mb-2 text-sm font-bold">Name</label>
