@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
 import Avatar from "../../assets/Avatar.jpeg";
 import PersonalInfoForm from "../forms/index";
+import edit from "../../assets/edit.png";
 
 // Reusable Components (as before)
 const ProfileHeader = ({ user, openModal }) => (
@@ -37,8 +38,11 @@ const InfoRow = ({ label, value }) => (
 
 const SectionWrapper = ({ title, children }) => (
   <div className="rounded-xl  mb-4 bg-white shadow-md">
-    <div className="bg-blue-50 p-4 flex items-center">
+    <div className="bg-blue-50 p-4 flex items-center justify-between">
       <h2 className="text-xl font-bold">{title}</h2>
+      <div>
+        <img src={edit} alt="update info" className="w-6 h-6 " />
+      </div>
     </div>
     {children}
   </div>
@@ -88,7 +92,7 @@ const ProfileSection = () => {
 
   return (
     <div className="p-4">
-      <ProfileHeader user={user} openModal={openModal} />
+      {/* <ProfileHeader user={user} openModal={openModal} /> */}
       {/* <UserBasicInfo user={user} avatar={Avatar} /> */}
 
       {/* Job Details */}
