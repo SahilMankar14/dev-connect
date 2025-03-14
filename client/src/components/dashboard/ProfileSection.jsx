@@ -36,12 +36,17 @@ const InfoRow = ({ label, value }) => (
   </p>
 );
 
-const SectionWrapper = ({ title, children }) => (
+const SectionWrapper = ({ title, handleSectionModal, children }) => (
   <div className="rounded-xl  mb-4 bg-white shadow-md">
     <div className="bg-blue-50 p-4 flex items-center justify-between">
       <h2 className="text-xl font-bold">{title}</h2>
       <div>
-        <img src={edit} alt="update info" className="w-6 h-6 " />
+        <img
+          src={edit}
+          alt="update info"
+          className="w-6 h-6 "
+          onClick={() => handleSectionModal(title)}
+        />
       </div>
     </div>
     {children}
@@ -56,12 +61,47 @@ const DetailsList = ({ data, renderItem }) => (
   </div>
 );
 
+const UpdateDetail = ({ data, handleChange }) => {
+  // console.log("data:", data);
+  return (
+    <div className="max-w-md mx-auto bg-white p-8 rounded-xl h-80 overflow-y-auto scrollbar-hide">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Update Information
+      </h2>
+      <form>
+        {Object.entries(data).map(([key, value]) => {
+          return (
+            <div key={key} className="flex flex-col mb-2">
+              <label className="text-base font-bold text-gray-800 capitalize py-2">
+                {key}:
+              </label>
+              <input
+                className="p-2 border rounded-lg border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                type="text"
+                value={value}
+                onChange={handleChange}
+              />
+            </div>
+          );
+        })}
+        <div className="flex items-center justify-center">
+          <button className="bg-blue-600 hover:bg-blue-700 mt-4 border rounded-lg px-12 py-2 font-[Inter] text-white font-medium transition duration-300">
+            Submit Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 const ProfileSection = () => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [personalInfo, setPersonalInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openSectionModal, setOpenSectionModal] = useState(false);
+  const [activeModal, setActiveModal] = useState("null");
 
   const fetchDetails = async () => {
     try {
@@ -86,6 +126,26 @@ const ProfileSection = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const toCamelCase = (str) =>
+    str
+      .toLowerCase()
+      .split(" ")
+      .map((word, index) =>
+        index === 0 ? word : word[0].toUpperCase() + word.slice(1)
+      )
+      .join("");
+
+  const handleSectionModal = (title) => {
+    console.log("function is called");
+    console.log("title:", title);
+    setOpenSectionModal(!openSectionModal);
+
+    const titleInCamelCase = toCamelCase(title);
+    setActiveModal(titleInCamelCase);
+  };
+
+  const handleChange = () => {};
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading profile: {error.message}</div>;
   if (!personalInfo) return <div>No profile information available</div>;
@@ -96,7 +156,10 @@ const ProfileSection = () => {
       {/* <UserBasicInfo user={user} avatar={Avatar} /> */}
 
       {/* Job Details */}
-      <SectionWrapper title="Job Details">
+      <SectionWrapper
+        title="Job Details"
+        handleSectionModal={handleSectionModal}
+      >
         <DetailsList
           data={[
             { label: "Title", value: personalInfo.jobDetails?.title },
@@ -118,7 +181,10 @@ const ProfileSection = () => {
       </SectionWrapper>
 
       {/* Contact Details */}
-      <SectionWrapper title="Contact Details">
+      <SectionWrapper
+        title="Contact Details"
+        handleSectionModal={handleSectionModal}
+      >
         <DetailsList
           data={[
             { label: "Phone", value: personalInfo.contactDetails?.phone },
@@ -135,7 +201,10 @@ const ProfileSection = () => {
       </SectionWrapper>
 
       {/* Social Platforms */}
-      <SectionWrapper title="Social Platforms">
+      <SectionWrapper
+        title="Social Platforms"
+        handleSectionModal={handleSectionModal}
+      >
         <DetailsList
           data={[
             {
@@ -280,6 +349,29 @@ const ProfileSection = () => {
               </button>
             </div>
             <PersonalInfoForm onClose={closeModal} user={user} />
+          </div>
+        </div>
+      )}
+
+      {/* Modal for editing each sections */}
+      {openSectionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-[500px] max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Edit Section</h2>
+              <button
+                onClick={() => setOpenSectionModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            {/* Your form or content here */}
+            {/* <p>Modal content goes here</p> */}
+            <UpdateDetail
+              data={personalInfo[activeModal]}
+              handleChange={handleChange}
+            />
           </div>
         </div>
       )}
