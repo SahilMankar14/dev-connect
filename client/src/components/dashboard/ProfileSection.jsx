@@ -80,6 +80,7 @@ const UpdateDetail = ({ data, handleChange }) => {
                 type="text"
                 value={value}
                 onChange={handleChange}
+                name={key}
               />
             </div>
           );
