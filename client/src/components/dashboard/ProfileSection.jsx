@@ -61,14 +61,14 @@ const DetailsList = ({ data, renderItem }) => (
   </div>
 );
 
-const UpdateDetail = ({ data, handleChange }) => {
+const UpdateDetail = ({ data, handleChange, handleSubmit }) => {
   // console.log("data:", data);
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded-xl h-80 overflow-y-auto scrollbar-hide">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Update Information
       </h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         {Object.entries(data).map(([key, value]) => {
           return (
             <div key={key} className="flex flex-col mb-2">
@@ -86,7 +86,10 @@ const UpdateDetail = ({ data, handleChange }) => {
           );
         })}
         <div className="flex items-center justify-center">
-          <button className="bg-blue-600 hover:bg-blue-700 mt-4 border rounded-lg px-12 py-2 font-[Inter] text-white font-medium transition duration-300">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 mt-4 border rounded-lg px-12 py-2 font-[Inter] text-white font-medium transition duration-300"
+          >
             Submit Changes
           </button>
         </div>
@@ -155,7 +158,30 @@ const ProfileSection = () => {
     }));
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("http://localhost:3000/update_info", {
+        section: activeModal,
+        data: activeModalState,
+      });
+
+      if (response.status === 200) {
+        console.log("Information updated successfully");
+        setOpenSectionModal(false);
+        // Update the main data to reflect changes
+        setPersonalInfo((prev) => ({
+          ...prev,
+          [activeModal]: activeModalState,
+        }));
+      } else {
+        console.log("Failed to update information");
+      }
+    } catch (error) {
+      console.error("Error updating information:", error);
+    }
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading profile: {error.message}</div>;
@@ -170,7 +196,6 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Job Details"
         handleSectionModal={handleSectionModal}
-        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -196,7 +221,6 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Contact Details"
         handleSectionModal={handleSectionModal}
-        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -217,7 +241,6 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Social Platforms"
         handleSectionModal={handleSectionModal}
-        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -382,7 +405,11 @@ const ProfileSection = () => {
             </div>
             {/* Your form or content here */}
             {/* <p>Modal content goes here</p> */}
-            <UpdateDetail data={activeModalState} handleChange={handleChange} />
+            <UpdateDetail
+              data={activeModalState}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+            />
           </div>
         </div>
       )}
