@@ -79,3 +79,52 @@ exports.getPersonalInfo = async (req, res) => {
     });
   }
 };
+
+exports.updatePersonalInfo = async (req, res) => {
+  try {
+    const { section, data, userEmail } = req.body;
+
+    if (!section || !data || !userEmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Section, data, and userEmail are required",
+      });
+    }
+
+    // Find the document by email
+    const personalInfo = await PersonalInfo.findOne({
+      "contactDetails.email": userEmail,
+    });
+
+    if (!personalInfo) {
+      return res.status(404).json({
+        success: false,
+        message: "No personal information found for this user",
+      });
+    }
+
+    // Create the update object with the specific section to update
+    const updateObject = {
+      [section]: data,
+    };
+
+    // Update the document
+    const updatedInfo = await PersonalInfo.findByIdAndUpdate(
+      personalInfo._id,
+      { $set: updateObject },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `${section} updated successfully`,
+      data: updatedInfo,
+    });
+  } catch (error) {
+    console.error("Error in updatePersonalInfo:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Error updating personal information",
+    });
+  }
+};

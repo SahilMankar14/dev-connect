@@ -162,12 +162,16 @@ const ProfileSection = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/update_info", {
-        section: activeModal,
-        data: activeModalState,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/personalDetails/updatepersonalinfo",
+        {
+          section: activeModal,
+          data: activeModalState,
+          userEmail: "bhushan@gmail.com",
+        }
+      );
 
-      if (response.status === 200) {
+      if (response.data.success) {
         console.log("Information updated successfully");
         setOpenSectionModal(false);
         // Update the main data to reflect changes
