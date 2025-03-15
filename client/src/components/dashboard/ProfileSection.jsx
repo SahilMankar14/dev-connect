@@ -79,7 +79,7 @@ const UpdateDetail = ({ data, handleChange }) => {
                 className="p-2 border rounded-lg border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 type="text"
                 value={value}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
                 name={key}
               />
             </div>
@@ -103,6 +103,7 @@ const ProfileSection = () => {
   const [error, setError] = useState(null);
   const [openSectionModal, setOpenSectionModal] = useState(false);
   const [activeModal, setActiveModal] = useState("null");
+  const [activeModalState, setActiveModalState] = useState(null);
 
   const fetchDetails = async () => {
     try {
@@ -143,9 +144,18 @@ const ProfileSection = () => {
 
     const titleInCamelCase = toCamelCase(title);
     setActiveModal(titleInCamelCase);
+    setActiveModalState(personalInfo[titleInCamelCase]);
   };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setActiveModalState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {};
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading profile: {error.message}</div>;
@@ -160,6 +170,7 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Job Details"
         handleSectionModal={handleSectionModal}
+        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -185,6 +196,7 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Contact Details"
         handleSectionModal={handleSectionModal}
+        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -205,6 +217,7 @@ const ProfileSection = () => {
       <SectionWrapper
         title="Social Platforms"
         handleSectionModal={handleSectionModal}
+        handleSubmit={handleSubmit}
       >
         <DetailsList
           data={[
@@ -369,10 +382,7 @@ const ProfileSection = () => {
             </div>
             {/* Your form or content here */}
             {/* <p>Modal content goes here</p> */}
-            <UpdateDetail
-              data={personalInfo[activeModal]}
-              handleChange={handleChange}
-            />
+            <UpdateDetail data={activeModalState} handleChange={handleChange} />
           </div>
         </div>
       )}
