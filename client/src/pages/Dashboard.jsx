@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ProfileSection from "../components/dashboard/ProfileSection";
+// import ProfileSection from "../components/dashboard/ProfileSection";
+import ProfileSection from "../components/dashboard/profile/profile/ProfileSection";
 import PostSection from "../components/dashboard/PostSection";
 import ConnectionsSection from "../components/dashboard/ConnectionsSection";
 import SettingsSection from "../components/dashboard/SettingsSection";

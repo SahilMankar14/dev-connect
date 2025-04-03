@@ -9,6 +9,8 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 // import PersonalInfoForm from "./components/forms/PersonalInfoForm";
 import PersonalInfoForm from "./components/forms/index";
 import Layout from "./components/layouts/Layout";
+// import UpdatePersonalDetails from "./components/dashboard/practise/UpdatePersonalDetails";
+// import UpdateEducationDetails from "./components/dashboard/practise/UpdateEducationDetails";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
+          {/* <Route path="/update" element={<UpdatePersonalDetails />} /> */}
+          {/* <Route path="/education" element={<UpdateEducationDetails />} /> */}
           <Route
             path="/dashboard"
             element={
