@@ -20,7 +20,11 @@ import AccomplishmentsSection from "./sections/AccomplishmentsSection";
 import ProfileSummarySection from "./sections/ProfileSummarySection";
 
 // Forms
-import PersonalInfoForm from "../forms";
+import PersonalInfoForm from "../forms/index";
+import SkillsForm from "../forms/SkillsForm";
+import EducationForm from "../forms/EducationForm";
+import AccomplishmentsForm from "../forms/AccomplishmentsForm";
+import ProfileSummaryForm from "../forms/ProfileSummaryForm";
 
 // Configuration
 import { profileSections } from "../../../../config/profileSection";
@@ -111,6 +115,81 @@ const ProfileSection = () => {
     }));
   };
 
+  const handleArrayChange = (index, value) => {
+    const newArray = [...activeSectionData];
+    newArray[index] = value;
+    setActiveSectionData(newArray);
+  };
+
+  const addArrayItem = () => {
+    setActiveSectionData((prev) => {
+      if (Array.isArray(prev)) {
+        return [...prev, ""];
+      } else if (activeSection === "education") {
+        return [
+          ...prev,
+          {
+            degree: "",
+            institution: "",
+            year: { start: "", end: "" },
+          },
+        ];
+      }
+      return prev;
+    });
+  };
+
+  const removeArrayItem = (index) => {
+    setActiveSectionData((prev) => {
+      const newArray = [...prev];
+      newArray.splice(index, 1);
+      return newArray;
+    });
+  };
+
+  const handleEducationChange = (index, field, value) => {
+    setActiveSectionData((prev) => {
+      const newEducation = [...prev];
+      if (field.includes(".")) {
+        const [parent, child] = field.split(".");
+        newEducation[index] = {
+          ...newEducation[index],
+          [parent]: {
+            ...newEducation[index][parent],
+            [child]: value,
+          },
+        };
+      } else {
+        newEducation[index] = {
+          ...newEducation[index],
+          [field]: value,
+        };
+      }
+      return newEducation;
+    });
+  };
+
+  const handleAccomplishmentsChange = (category, index, value) => {
+    setActiveSectionData((prev) => ({
+      ...prev,
+      [category]: prev[category].map((item, i) => (i === index ? value : item)),
+    }));
+  };
+
+  const addAccomplishmentItem = (category) => {
+    setActiveSectionData((prev) => ({
+      ...prev,
+      [category]: [...prev[category], ""],
+    }));
+  };
+
+  const removeAccomplishmentItem = (category, index) => {
+    setActiveSectionData((prev) => ({
+      ...prev,
+      [category]: prev[category].filter((_, i) => i !== index),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await updateSection(activeSection, activeSectionData);
@@ -131,6 +210,63 @@ const ProfileSection = () => {
     );
   if (!personalInfo)
     return <div className="p-4">No profile information available</div>;
+
+  // Render the appropriate form based on the active section
+  const renderSectionForm = () => {
+    switch (activeSection) {
+      case "jobDetails":
+      case "contactDetails":
+      case "socialPlatforms":
+      case "personalDetails":
+        return (
+          <UpdateDetail
+            data={activeSectionData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
+        );
+      case "skills":
+        return (
+          <SkillsForm
+            skills={activeSectionData}
+            handleChange={handleArrayChange}
+            handleSubmit={handleSubmit}
+            addSkill={addArrayItem}
+            removeSkill={removeArrayItem}
+          />
+        );
+      case "education":
+        return (
+          <EducationForm
+            education={activeSectionData}
+            handleChange={handleEducationChange}
+            handleSubmit={handleSubmit}
+            addEducation={addArrayItem}
+            removeEducation={removeArrayItem}
+          />
+        );
+      case "accomplishments":
+        return (
+          <AccomplishmentsForm
+            data={activeSectionData}
+            handleChange={handleAccomplishmentsChange}
+            handleSubmit={handleSubmit}
+            addItem={addAccomplishmentItem}
+            removeItem={removeAccomplishmentItem}
+          />
+        );
+      case "profileSummary":
+        return (
+          <ProfileSummaryForm
+            summary={activeSectionData}
+            handleChange={(value) => setActiveSectionData(value)}
+            handleSubmit={handleSubmit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="p-4">
@@ -170,22 +306,28 @@ const ProfileSection = () => {
       </SectionWrapper>
 
       {/* Skills */}
-      <SectionWrapper title="Skills">
+      <SectionWrapper title="Skills" handleSectionModal={handleSectionModal}>
         <SkillsSection data={personalInfo.skills} />
       </SectionWrapper>
 
       {/* Education */}
-      <SectionWrapper title="Education">
+      <SectionWrapper title="Education" handleSectionModal={handleSectionModal}>
         <EducationSection data={personalInfo.education} />
       </SectionWrapper>
 
       {/* Accomplishments */}
-      <SectionWrapper title="Accomplishments">
+      <SectionWrapper
+        title="Accomplishments"
+        handleSectionModal={handleSectionModal}
+      >
         <AccomplishmentsSection data={personalInfo.accomplishments} />
       </SectionWrapper>
 
       {/* Profile Summary */}
-      <SectionWrapper title="Profile Summary">
+      <SectionWrapper
+        title="Profile Summary"
+        handleSectionModal={handleSectionModal}
+      >
         <ProfileSummarySection data={personalInfo.profileSummary} />
       </SectionWrapper>
 
@@ -212,7 +354,7 @@ const ProfileSection = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[500px] max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Edit Section</h2>
+              <h2 className="text-xl font-bold">Edit {activeSection}</h2>
               <button
                 onClick={() => setSectionModalOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -220,11 +362,7 @@ const ProfileSection = () => {
                 ✕
               </button>
             </div>
-            <UpdateDetail
-              data={activeSectionData}
-              handleChange={handleChange}
-              handleSubmit={handleSubmit}
-            />
+            {renderSectionForm()}
           </div>
         </div>
       )}
