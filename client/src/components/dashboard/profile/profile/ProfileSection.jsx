@@ -84,6 +84,7 @@ const ProfileSection = () => {
   };
 
   React.useEffect(() => {
+    console.log("User:", user);
     fetchDetails("bhushan@gmail.com");
   }, [user]);
 
