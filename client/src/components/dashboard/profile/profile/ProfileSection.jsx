@@ -84,8 +84,18 @@ const ProfileSection = () => {
   };
 
   React.useEffect(() => {
-    console.log("User:", user);
-    fetchDetails("bhushan@gmail.com");
+    // AbortController to cancel the fetch request if the component unmounts
+    const controller = new AbortController();
+
+    const userEmail = user?.email;
+
+    fetchDetails(userEmail);
+    // Cleanup function to abort the request if the component unmounts
+    return () => {
+      if (controller) {
+        controller.abort();
+      }
+    };
   }, [user]);
 
   const openProfileModal = () => setIsProfileModalOpen(true);
