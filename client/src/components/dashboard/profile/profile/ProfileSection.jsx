@@ -65,7 +65,7 @@ const ProfileSection = () => {
         {
           section,
           data,
-          userEmail: "bhushan@gmail.com",
+          userEmail: user?.email,
         }
       );
 
@@ -208,9 +208,6 @@ const ProfileSection = () => {
       setSectionModalOpen(false);
     }
   };
-
-  // Use email from auth if available, otherwise use default
-  const userEmail = "bhushan@gmail.com";
 
   if (isLoading) return <div className="p-4">Loading...</div>;
   if (error)
